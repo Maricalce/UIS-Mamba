@@ -96,12 +96,12 @@ Pre-trained weights for UIS-Mamba variants are available for download:
 
 | Model           | Backbone       | Dataset   | mAP  | Params | Download Link                                                                 |
 |-----------------|----------------|-----------|------|--------|-------------------------------------------------------------------------------|
-| UIS-Mamba-T     | UIS-Mamba-T    | UIIS      | 29.4 | 56M    | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_t_uiis.pth) |
-| UIS-Mamba-S     | UIS-Mamba-S    | UIIS      | 30.4 | 76M    | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_s_uiis.pth) |
-| UIS-Mamba-B     | UIS-Mamba-B    | UIIS      | 31.2 | 115M   | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_b_uiis.pth) |
-| UIS-Mamba-T     | UIS-Mamba-T    | USIS10K   | 42.1 | 56M    | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_t_usis10k.pth) |
-| UIS-Mamba-S     | UIS-Mamba-S    | USIS10K   | 44.5 | 76M    | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_s_usis10k.pth) |
-| UIS-Mamba-B     | UIS-Mamba-B    | USIS10K   | 46.2 | 115M   | [ckpt](https://github.com/Maricalce/UIS-Mamba/releases/tag/v1.0/uis_mamba_b_usis10k.pth) |
+| UIS-Mamba-T     | UIS-Mamba-T    | UIIS      | 29.4 | 56M    | [ckpt](https://pan.baidu.com/s/1EM6A7PywglGVDwbI1sto0g?pwd=bqyb) |
+| UIS-Mamba-S     | UIS-Mamba-S    | UIIS      | 30.4 | 76M    | [ckpt](https://pan.baidu.com/s/1HNc55AN0W1fqJmlfchiacQ?pwd=3v76) |
+| UIS-Mamba-B     | UIS-Mamba-B    | UIIS      | 31.2 | 115M   | [ckpt](https://pan.baidu.com/s/1EM6A7PywglGVDwbI1sto0g?pwd=bqyb) |
+| UIS-Mamba-T     | UIS-Mamba-T    | USIS10K   | 42.1 | 56M    | [ckpt](https://pan.baidu.com/s/1x8bF7GVA0-rzQCn21gxdhQ?pwd=32nx) |
+| UIS-Mamba-S     | UIS-Mamba-S    | USIS10K   | 44.5 | 76M    | [ckpt](https://pan.baidu.com/s/1poBSuGHsS_GT1V-i3Vim9w?pwd=kyhc) |
+| UIS-Mamba-B     | UIS-Mamba-B    | USIS10K   | 46.2 | 115M   | [ckpt](https://pan.baidu.com/s/1poBSuGHsS_GT1V-i3Vim9w?pwd=kyhc) |
 
 
 ## ⭐ BibTeX
