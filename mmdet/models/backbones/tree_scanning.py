@@ -42,9 +42,6 @@ class HiddenStateWeaken(nn.Module):
     Suppresses complex underwater background interference on hidden state updates
     using degree-based foreground/background separation.
     
-    This lightweight version uses node degree as a heuristic to identify foreground
-    patches, avoiding expensive eigendecomposition while maintaining effectiveness.
-    
     Mathematical formulation:
         h_i = sum_j(B_j * phi_i * p_j * prod_k(A_k))
         y_i = C_i * Norm(h_i) + D * phi_i * p_i
@@ -67,9 +64,6 @@ class HiddenStateWeaken(nn.Module):
         Uses node connectivity (weighted degree) as a heuristic for foreground detection.
         High-degree nodes (well-connected) are more likely to be foreground instance patches.
         
-        This approach avoids expensive O(n^3) eigendecomposition, making it suitable for
-        real-time underwater instance segmentation applications.
-        
         Args:
             edge_index (torch.Tensor): Edge connectivity, shape (B, num_edges, 2)
             edge_weights (torch.Tensor): Edge weights, shape (B, num_edges)
@@ -82,24 +76,24 @@ class HiddenStateWeaken(nn.Module):
         B, num_edges, _ = edge_index.shape
         device = edge_index.device
         
-        # Compute weighted degree for each node (vectorized!)
+
         batch_indices = torch.arange(B, device=device).view(B, 1).expand(B, num_edges)
         
-        # Scatter add to compute degrees
+
         src_idx = edge_index[:, :, 0]  # (B, num_edges)
         dst_idx = edge_index[:, :, 1]  # (B, num_edges)
         
-        # Initialize degree tensor
+
         degrees = torch.zeros(B, num_nodes, device=device)
         
-        # Accumulate weighted degrees (each edge contributes to both nodes)
+
         degrees.scatter_add_(1, src_idx, edge_weights)
         degrees.scatter_add_(1, dst_idx, edge_weights)
         
-        # Normalize degrees to [0, 1]
+
         degrees_normalized = degrees / (degrees.max(dim=1, keepdim=True)[0] + 1e-8)
         
-        # Threshold: nodes with above-median degree are foreground
+
         threshold = degrees_normalized.median(dim=1, keepdim=True)[0]
         masks = (degrees_normalized >= threshold).float()
         
@@ -128,10 +122,10 @@ class HiddenStateWeaken(nn.Module):
         Returns:
             phi: (B, num_nodes) - suppression weights for hidden state
         """
-        # Step 1: Degree-based patch categorization (FAST & MEMORY EFFICIENT!)
+
         masks = self.degree_based_segmentation(edge_index, edge_weights, num_nodes)
         
-        # Step 2: Compute suppression weights
+
         phi = self.compute_suppression_weights(masks)
         
         return phi
@@ -144,16 +138,6 @@ class AdaptiveGraphDeformation(nn.Module):
     Dynamically adjusts patch positions and scales to adapt to underwater scene
     characteristics, addressing color distortion and boundary blurring challenges.
     
-    Key innovations:
-    1. Learnable offset prediction: Δx, Δy = Tanh(W_offset · f_P(p))
-       - Adaptively shifts patches to align with instance boundaries
-       
-    2. Learnable scale prediction: Δw, Δh = Softplus(W_scale · f_P(p))
-       - Dynamically adjusts patch size for multi-scale underwater instances
-       
-    3. Patch pooling optimization: Merges multiple pixels into larger patches
-       - Reduces computational complexity by pool_size^2
-       - Maintains semantic information while improving efficiency
     
     Mathematical formulation:
         p̃ = G(p(p_x + Δx, p_y + Δy); Δw, Δh)
@@ -171,8 +155,7 @@ class AdaptiveGraphDeformation(nn.Module):
         self.patch_size = patch_size
         self.pool_size = pool_size  # Merge pool_size x pool_size pixels into one patch
         
-        # Dense prediction function for deformation parameters (memory-efficient)
-        # Use smaller hidden dimension to reduce memory
+
         hidden_dim = max(d_model // 4, 64)
         
         self.deform_predictor = nn.Sequential(
@@ -181,18 +164,15 @@ class AdaptiveGraphDeformation(nn.Module):
             nn.Linear(hidden_dim, 4),  # 4 parameters: Δx, Δy, Δw, Δh
         )
         
-        # Learnable weight coefficients for activation
+
         self.weight_coef = nn.Parameter(torch.ones(4))
         
-        # Initialize to zero offset (identity transformation)
+
         nn.init.constant_(self.deform_predictor[-1].weight, 0)
         nn.init.constant_(self.deform_predictor[-1].bias, 0)
         
     def pool_patches(self, features, H, W):
         """
-        Merge multiple pixels into larger patches using average pooling
-        Reduces computation by factor of pool_size^2
-        
         Args:
             features: (B, L, C) where L = H * W
             H, W: original spatial dimensions
@@ -202,16 +182,16 @@ class AdaptiveGraphDeformation(nn.Module):
         """
         B, L, C = features.shape
         
-        # Reshape to spatial format
+
         feat_map = features.transpose(1, 2).reshape(B, C, H, W)
         
-        # Apply average pooling
+
         pooled_map = F.avg_pool2d(feat_map, kernel_size=self.pool_size, stride=self.pool_size)
         
-        # Get pooled dimensions
+
         _, _, H_pooled, W_pooled = pooled_map.shape
         
-        # Reshape back to sequence
+
         pooled_features = pooled_map.reshape(B, C, -1).transpose(1, 2)
         
         return pooled_features, H_pooled, W_pooled
@@ -229,13 +209,12 @@ class AdaptiveGraphDeformation(nn.Module):
         """
         B, L_pooled, C = pooled_features.shape
         
-        # Reshape to spatial format
+
         feat_map = pooled_features.transpose(1, 2).reshape(B, C, H_pooled, W_pooled)
-        
-        # Upsample using bilinear interpolation
+
         upsampled_map = F.interpolate(feat_map, size=(H_orig, W_orig), mode='bilinear', align_corners=True)
         
-        # Reshape back to sequence
+
         upsampled_features = upsampled_map.reshape(B, C, -1).transpose(1, 2)
         
         return upsampled_features
@@ -252,48 +231,50 @@ class AdaptiveGraphDeformation(nn.Module):
         """
         B, L, C = features.shape
         
-        # Step 1: Pool patches to reduce computation
+
         pooled_features, H_pooled, W_pooled = self.pool_patches(features, H, W)
         L_pooled = H_pooled * W_pooled
         
-        # Step 2: Predict deformation parameters on pooled patches
+
         deform_params = self.deform_predictor(pooled_features)  # (B, L_pooled, 4)
         deform_params = deform_params * self.weight_coef.view(1, 1, 4)
         
-        # Apply activation functions
+
         delta_x = torch.tanh(deform_params[:, :, 0])  # (B, L_pooled)
         delta_y = torch.tanh(deform_params[:, :, 1])  # (B, L_pooled)
-        delta_w = torch.sigmoid(deform_params[:, :, 2])  # (B, L_pooled)
-        delta_h = torch.sigmoid(deform_params[:, :, 3])  # (B, L_pooled)
-        
-        # Step 3: Generate pooled patch coordinates
+        delta_w = torch.softplus(deform_params[:, :, 2])  # (B, L_pooled)
+        delta_h = torch.softplus(deform_params[:, :, 3])  # (B, L_pooled)
+        # delta_w = torch.sigmoid(deform_params[:, :, 2])  # (B, L_pooled)
+        # delta_h = torch.sigmoid(deform_params[:, :, 3])  # (B, L_pooled)
+        # delta_w = torch.tanh(deform_params[:, :, 2])  # (B, L_pooled)
+        # delta_h = torch.tanh(deform_params[:, :, 3])  # (B, L_pooled)
+
         y_coords = torch.arange(H_pooled, device=features.device).float()
         x_coords = torch.arange(W_pooled, device=features.device).float()
         grid_y, grid_x = torch.meshgrid(y_coords, x_coords, indexing='ij')
         
-        # Normalize coordinates to [-1, 1]
+
         grid_x = 2.0 * grid_x / max(W_pooled - 1, 1) - 1.0
         grid_y = 2.0 * grid_y / max(H_pooled - 1, 1) - 1.0
-        
-        # Flatten and expand for batch
+
         orig_coords = torch.stack([grid_x, grid_y], dim=-1)  # (H_pooled, W_pooled, 2)
         orig_coords = orig_coords.reshape(1, L_pooled, 2).expand(B, -1, -1)  # (B, L_pooled, 2)
         
-        # Step 4: Apply deformation on pooled coordinates
+
         deformed_x = orig_coords[:, :, 0] + delta_x * (2.0 / max(W_pooled, 1))
         deformed_y = orig_coords[:, :, 1] + delta_y * (2.0 / max(H_pooled, 1))
         
-        # Clamp to valid range
+
         deformed_x = torch.clamp(deformed_x, -1.0, 1.0)
         deformed_y = torch.clamp(deformed_y, -1.0, 1.0)
         
         deformed_coords = torch.stack([deformed_x, deformed_y], dim=-1)  # (B, L_pooled, 2)
         
-        # Step 5: Apply deformation to ORIGINAL resolution features (not pooled)
+
         # This ensures output has same resolution as input
         feat_map = features.transpose(1, 2).reshape(B, C, H, W)  # (B, C, H, W)
         
-        # Upsample deformed coordinates to original resolution
+
         deformed_coords_map = deformed_coords.reshape(B, H_pooled, W_pooled, 2)
         deformed_coords_full = F.interpolate(
             deformed_coords_map.permute(0, 3, 1, 2),  # (B, 2, H_pooled, W_pooled)
@@ -302,7 +283,7 @@ class AdaptiveGraphDeformation(nn.Module):
             align_corners=True
         ).permute(0, 2, 3, 1)  # (B, H, W, 2)
         
-        # Apply bilinear sampling on original resolution
+
         deformed_feat_map = F.grid_sample(
             feat_map, 
             deformed_coords_full, 
@@ -311,10 +292,10 @@ class AdaptiveGraphDeformation(nn.Module):
             align_corners=True
         )  # (B, C, H, W)
         
-        # Reshape back
+
         deformed_features = deformed_feat_map.reshape(B, C, -1).transpose(1, 2)  # (B, L, C)
         
-        # Store full deformation parameters (pooled resolution)
+
         full_deform_params = torch.stack([delta_x, delta_y, delta_w, delta_h], dim=-1)  # (B, L_pooled, 4)
         
         return deformed_features, full_deform_params, deformed_coords
@@ -338,15 +319,6 @@ class DynamicGraphPruning(nn.Module):
         - p̃_i^c, p̃_j^c: Patch spatial coordinates
         - α ∈ [0,1]: Learnable balance parameter
     
-    The learnable α automatically balances:
-        - Spatial proximity (important for instance continuity)
-        - Semantic similarity (important for discriminating overlapping instances)
-    
-    Key optimization: Sparse edge computation
-        - Only computes weights for 4-connected neighbors
-        - Reduces memory from O(L^2) to O(L)
-        - Maintains MST quality through dynamic edge weighting
-    
     Args:
         d_model (int): Feature dimension
         pool_size (int): Pooling size (for consistency). Default: 2
@@ -356,23 +328,23 @@ class DynamicGraphPruning(nn.Module):
         self.d_model = d_model
         self.pool_size = pool_size
         
-        # Learnable parameter to balance spatial and semantic similarity
+
         # Critical for distinguishing overlapping marine organisms with similar appearances
         self.alpha = nn.Parameter(torch.tensor(0.5))
         
-        # Feature projection for semantic similarity (use smaller dimension to save memory)
+
         proj_dim = max(d_model // 2, 128)
         self.semantic_proj = nn.Sequential(
             nn.Linear(d_model, proj_dim),
             nn.LayerNorm(proj_dim),
         )
         
-        # Edge index cache (Key Optimization: Pre-compute and reuse)
+
         self.edge_index_cache = {}
         
     def compute_edge_weights(self, features, deformed_coords, H, W, edge_index):
         """
-        Compute dynamic edge weights for ONLY the edges in edge_index (VECTORIZED - No for loop!)
+        Compute dynamic edge weights for ONLY the edges in edge_index
         
         Args:
             features: (B, L, C) - patch features
@@ -386,32 +358,32 @@ class DynamicGraphPruning(nn.Module):
         B, L, C = features.shape
         num_edges = edge_index.shape[1]
         
-        # Project features for semantic similarity
+
         semantic_features = self.semantic_proj(features)  # (B, L, C)
         semantic_features = F.normalize(semantic_features, p=2, dim=-1)  # L2 normalize
         
-        # ===== VECTORIZED COMPUTATION (Key Optimization!) =====
+
         # Create batch indices for advanced indexing
         batch_indices = torch.arange(B, device=features.device).view(B, 1).expand(B, num_edges)
         
         src_idx = edge_index[:, :, 0]  # (B, num_edges)
         dst_idx = edge_index[:, :, 1]  # (B, num_edges)
         
-        # Semantic similarity (vectorized across all batches)
+
         src_features = semantic_features[batch_indices, src_idx]  # (B, num_edges, C)
         dst_features = semantic_features[batch_indices, dst_idx]  # (B, num_edges, C)
         semantic_sim = (src_features * dst_features).sum(dim=-1)  # (B, num_edges)
         
-        # Spatial distance (vectorized across all batches)
+ 
         src_coords = deformed_coords[batch_indices, src_idx]  # (B, num_edges, 2)
         dst_coords = deformed_coords[batch_indices, dst_idx]  # (B, num_edges, 2)
         spatial_dist = torch.sqrt(((src_coords - dst_coords) ** 2).sum(dim=-1) + 1e-8)  # (B, num_edges)
         
-        # Normalize spatial distance
+
         max_dist = 1.414  # sqrt(2.0)
         spatial_sim = 1.0 - (spatial_dist / max_dist)
         
-        # Combine with learnable alpha
+
         alpha = torch.sigmoid(self.alpha)
         edge_weights = alpha * semantic_sim + (1 - alpha) * spatial_sim  # (B, num_edges)
         
@@ -419,7 +391,7 @@ class DynamicGraphPruning(nn.Module):
     
     def get_or_build_edge_index(self, H, W, device):
         """
-        Get edge index from cache or build it (Key Optimization: Cache reuse)
+        Get edge index from cache or build it 
         
         4-connected graph structure is fixed for given H,W, so we cache it!
         """
@@ -446,10 +418,10 @@ class DynamicGraphPruning(nn.Module):
             else:
                 edge_index = torch.zeros(1, 2, dtype=torch.long)
             
-            # Cache it (will be moved to device when needed)
+           
             self.edge_index_cache[key] = edge_index
         
-        # Return cached edge index (move to device if needed)
+        
         edge_index = self.edge_index_cache[key]
         if edge_index.device != device:
             edge_index = edge_index.to(device)
@@ -459,7 +431,7 @@ class DynamicGraphPruning(nn.Module):
     
     def build_dynamic_graph(self, features, deformed_coords, H, W):
         """
-        Build dynamic graph with pruned edges based on combined weights (OPTIMIZED with cache)
+        Build dynamic graph with pruned edges based on combined weights
         
         Returns:
             edge_index: (B, num_edges, 2) - edge connectivity
@@ -468,13 +440,13 @@ class DynamicGraphPruning(nn.Module):
         B, L, C = features.shape
         device = features.device
         
-        # Get edge index from cache (Key Optimization!)
+       
         edge_index = self.get_or_build_edge_index(H, W, device)  # (num_edges, 2)
         
-        # Expand for batch
+       
         edge_index = edge_index.unsqueeze(0).expand(B, -1, -1)  # (B, num_edges, 2)
         
-        # Compute edge weights (vectorized, no for loop!)
+        
         edge_weights_out = self.compute_edge_weights(features, deformed_coords, H, W, edge_index)
         
         return edge_index, edge_weights_out
