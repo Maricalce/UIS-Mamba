@@ -17,17 +17,6 @@ We propose **UIS-Mamba**—the first Mamba-based underwater instance segmentatio
 UIS-Mamba achieves state-of-the-art (SOTA) performance on UIIS and USIS10K datasets while keeping parameters and computational complexity low.
 
 
-## 🔍 Core Innovations
-### 1. Dynamic Tree Scan (DTS) Module
-Addresses fixed-patch scanning limitations in underwater scenes through two steps:  
-- **Adaptive Graph Deformation**: Predicts offset (Δx, Δy) and scale (Δw, Δh) parameters to adjust patches, preserving same-instance pixel regions even under color distortion.  
-- **Dynamic Graph Pruning**: Fuses spatial distance and semantic similarity to calculate edge weights, generating a Minimum Spanning Tree (MST) to maintain instance semantic integrity.  
-
-### 2. Hidden State Weaken (HSW) Module
-Mitigates background interference in Mamba’s hidden state updates:  
-- **Ncut-Based Patch Categorization**: Uses MST from DTS to partition patches into foreground (instance) and background, reducing computational complexity.  
-- **Hidden State Weaken**: Applies a suppression weight (φ=0.7, optimized via experiments) to background patches during state updates, enhancing instance feature focus.  
-
 
 ## 📊 Experimental Results
 ### Underwater Instance Segmentation (UIIS Dataset)
@@ -43,7 +32,7 @@ Mitigates background interference in Mamba’s hidden state updates:
 ### Underwater Salient Instance Segmentation (USIS10K Dataset)
 | Method          | Backbone       | Params | Class-Agnostic mAP | Multi-Class mAP |
 |-----------------|----------------|--------|--------------------|-----------------|
-| WaterMask R-CNN | ResNet-50      | 67M    | 58.3               | 37.7            |
+| WaterMask R-CNN | ResNet-50      | 54M    | 58.3               | 37.7            |
 | **UIS-Mamba-T** | UIS-Mamba-T    | 56M    | 62.2               | 42.1            |
 | WaterMask R-CNN | ResNet-101     | 67M    | 59.0               | 38.7            |
 | **UIS-Mamba-S** | UIS-Mamba-S    | 76M    | 63.1               | 44.5            |
@@ -134,10 +123,6 @@ If you use UIS-Mamba in your research, please cite our paper:
 
 
 ## ❤️ Acknowledgement
-This work is supported by:  
-- Taishan Scholar Project of Shandong Province (tsqn202306079)  
-- National Natural Science Foundation of China (62471278)  
-- Research Grants Council of Hong Kong (STG5/E-103/24-R)  
 
 Code is built upon [MMDetection](https://github.com/open-mmlab/mmdetection) and [GrootV](https://github.com/EasonXiao-888/MambaTree).
 
