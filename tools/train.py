@@ -26,23 +26,13 @@ from mmdet.utils import (collect_env, get_device, get_root_logger,
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('--config',
-                        default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_tiny_ms_3x.py",
-                        # default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_small_ms_3x.py",
-                        # default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_small_ms_3x.py",
-                        # default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_base_ms_3x.py",
+                        default="  ",
                        help='train config file path')
     parser.add_argument('--work-dir', 
-                        default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-T-UIIS",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-S-UIIS",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-B-UIIS",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-T-USIS10K",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-S-USIS10K",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-B-USIS10K",
-                        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-Pro-T-USIS10K",
+                        default="  ",
                         help='the dir to save logs and models')
     parser.add_argument(
         '--resume-from',
-        # default="/root/data1/yzj/WaterMask/tools/pth/UIS-Mamba-T-USIS10K/epoch_26.pth",
         help='the checkpoint file to resume from')
     parser.add_argument(
         '--auto-resume',
