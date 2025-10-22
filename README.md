@@ -10,9 +10,7 @@
 ## 📖 Abstract
 Underwater Instance Segmentation (UIS) is critical for underwater complex scene detection, but faces challenges like color distortion, blurred boundaries, and complex backgrounds. We propose **UIS-Mamba**—the first Mamba-based underwater instance segmentation model—equipped with two core modules:  **Dynamic Tree Scan (DTS)** and **Hidden State Weaken (HSW)**. UIS-Mamba achieves state-of-the-art (SOTA) performance on UIIS and USIS10K datasets while keeping parameters and computational complexity low.
 
-<object data="Framework.pdf" type="application/pdf" width="800" height="600">
-  <p>无法加载PDF，请<a href="Framework.pdf">点击下载</a></p>
-</object>
+![UIS-Mamba Framework](Framework.png)
 
 ## 📊 Experimental Results
 ### Underwater Instance Segmentation (UIIS Dataset)
