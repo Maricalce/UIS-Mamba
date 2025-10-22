@@ -1,5 +1,5 @@
 # [ACM MM 2025] UIS-Mamba: Exploring Mamba for Underwater Instance Segmentation
-[Runmin Cong<sup><span>1</span></sup>](), [Zongji Yu<sup><span>1</span></sup>](), [Hao Fang<sup><span>1,†</span></sup>](), [Haoyan Sun<sup><span>1</span></sup>](), [Sam Kwong<sup><span>2</span></sup>]()  
+[Runmin Cong<sup><span>1</span></sup>](https://scholar.google.cz/citations?user=-VrKJ0EAAAAJ&hl), [Zongji Yu<sup><span>1</span></sup>](https://scholar.google.com/citations?user=fDR2utkAAAAJ), [Hao Fang<sup><span>1,†</span></sup>](https://scholar.google.cz/citations?user=PA0RVvgAAAAJ), Haoyan Sun<sup><span>1</span></sup>, [Sam Kwong<sup><span>2</span></sup>](https://scholar.google.com/citations?user=_PVI6EAAAAAJ)  
 <sup><span>†</span></sup> Corresponding author  
 <sup>1</sup> School of Control Science and Engineering, Shandong University, Jinan, Shandong, China  
 <sup>2</sup> School of Data Science, Lingnan University, Hong Kong, China  
