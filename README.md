@@ -1,8 +1,8 @@
-# [ACM MM 2025] UIS-Mamba: Exploring Mamba for Underwater Instance Segmentation
-[Runmin Cong<sup><span>1</span></sup>](https://scholar.google.cz/citations?user=-VrKJ0EAAAAJ&hl), [Zongji Yu<sup><span>1</span></sup>](https://scholar.google.com/citations?user=fDR2utkAAAAJ), [Hao Fang<sup><span>1,†</span></sup>](https://scholar.google.cz/citations?user=PA0RVvgAAAAJ), Haoyan Sun<sup><span>1</span></sup>, [Sam Kwong<sup><span>2</span></sup>](https://scholar.google.com/citations?user=_PVI6EAAAAAJ)  
+# [ACM MM 2025] UIS-Mamba: Exploring Mamba for Underwater Instance Segmentation via Dynamic Tree Scan and Hidden State Weaken
+[Runmin Cong<sup><span>1</span></sup>](https://scholar.google.cz/citations?user=-VrKJ0EAAAAJ&hl), [Zongji Yu<sup><span>1</span></sup>](https://scholar.google.com/citations?user=fDR2utkAAAAJ), [Hao Fang<sup><span>1†</span></sup>](https://scholar.google.cz/citations?user=PA0RVvgAAAAJ), Haoyan Sun<sup><span>1</span></sup>, [Sam Kwong<sup><span>2</span></sup>](https://scholar.google.com/citations?user=_PVI6EAAAAAJ)  
 <sup><span>†</span></sup> Corresponding author  
-<sup>1</sup> School of Control Science and Engineering, Shandong University, Jinan, Shandong, China  
-<sup>2</sup> School of Data Science, Lingnan University, Hong Kong, China  
+<sup>1</sup> School of Control Science and Engineering, Shandong University
+<sup>2</sup> School of Data Science, Lingnan University
 <a href='https://arxiv.org/pdf/2508.00421v1'><img src='https://img.shields.io/badge/ArXiv-2508.00421v1-red'></a> 
 <a href='https://github.com/Maricalce/UIS-Mamba'><img src='https://img.shields.io/badge/GitHub-UIS--Mamba-green'></a>
 
@@ -25,7 +25,7 @@ Underwater Instance Segmentation (UIS) is critical for underwater complex scene 
 
 ### Underwater Salient Instance Segmentation (USIS10K Dataset)
 | Method          | Backbone       | Params | Class-Agnostic mAP | Multi-Class mAP |
-|-----------------|----------------|--------|--------------------|-----------------|
+|-----------------|----------------|--------|:------------------:|:---------------:|
 | WaterMask R-CNN | ResNet-50      | 54M    | 58.3               | 37.7            |
 | **UIS-Mamba-T** | UIS-Mamba-T    | 56M    | 62.2               | 42.1            |
 | WaterMask R-CNN | ResNet-101     | 67M    | 59.0               | 38.7            |
