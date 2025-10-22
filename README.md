@@ -76,7 +76,7 @@ data/
 - **USIS10K Dataset**: [Official Link](https://github.com/LiamLian0727/USIS10K)  
 
 
-Pre-trained weights for UIS-Mamba variants (initialized with GrootV pre-trained weights) are available for download:  [Official Link](https://github.com/EasonXiao-888/MambaTree)  
+Pre-trained weights for UIS-Mamba variants (initialized with GrootV ImageNet-1K	pre-trained weights) are available for download:  [Official Link](https://github.com/EasonXiao-888/MambaTree)  
 
 
 ### 2. Training
