@@ -79,15 +79,14 @@ data/
 Run training scripts for UIIS (instance segmentation) or USIS10K (salient instance segmentation):  
 ```bash
 # Train UIS-Mamba on UIIS/USIS10K (1 GPU)
-cd tools && python train.py
-
+python tools/train.py --config config_file_path --work-dir you_dir_to_save_logs_and_models
 ```
 
 ### 3. Evaluation
 Evaluate pre-trained models on validation/test sets:  
 ```bash
 # Evaluate on UIIS/USIS10K val set
-cd tools && python test.py
+python tools/test.py --config config_file_path model_checkpoint_path --eval segm
 ```
 
 
