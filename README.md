@@ -56,7 +56,7 @@ pip install -r requirements.txt
 
 
 ## 🚀 Train & Evaluate
-### 1. Dataset Preparation
+### 1. Dataset Preparation & Pre-trained Weights
 Download the two benchmark datasets and organize them as follows:  
 ```
 data/
@@ -74,6 +74,10 @@ data/
 ```
 - **UIIS Dataset**: [Official Link](https://github.com/LiamLian0727/WaterMask)  
 - **USIS10K Dataset**: [Official Link](https://github.com/LiamLian0727/USIS10K)  
+
+
+Pre-trained weights for UIS-Mamba variants (initialized with GrootV pre-trained weights) are available for download:  [Official Link](https://github.com/EasonXiao-888/MambaTree)  
+
 
 ### 2. Training
 Run training scripts for UIIS (instance segmentation) or USIS10K (salient instance segmentation):  
