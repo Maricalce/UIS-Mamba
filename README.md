@@ -83,14 +83,14 @@ Pre-trained weights for UIS-Mamba variants (initialized with GrootV ImageNet-1K	
 Run training scripts for UIIS (instance segmentation) or USIS10K (salient instance segmentation):  
 ```bash
 # Train UIS-Mamba on UIIS/USIS10K (1 GPU)
-python tools/train.py --config config_file_path --work-dir you_dir_to_save_logs_and_models
+python tools/train.py --config configs/vssm1/mask_rcnn_vssm_fpn_coco_tiny_ms_3x.py --work-dir you_dir_to_save_logs_and_models
 ```
 
 ### 3. Evaluation
 Evaluate pre-trained models on validation/test sets:  
 ```bash
 # Evaluate on UIIS/USIS10K val set
-python tools/test.py --config config_file_path model_checkpoint_path --eval segm
+python tools/test.py --config configs/vssm1/mask_rcnn_vssm_fpn_coco_tiny_ms_3x.py model_checkpoint_path --eval segm
 ```
 
 
