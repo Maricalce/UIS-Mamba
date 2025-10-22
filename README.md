@@ -101,7 +101,7 @@ Pre-trained weights for UIS-Mamba variants are available for download:
 | UIS-Mamba-B     | UIS-Mamba-B    | UIIS      | 31.2 | 115M   | [ckpt](https://pan.baidu.com/s/1EM6A7PywglGVDwbI1sto0g?pwd=bqyb) |
 | UIS-Mamba-T     | UIS-Mamba-T    | USIS10K   | 42.1 | 56M    | [ckpt](https://pan.baidu.com/s/1x8bF7GVA0-rzQCn21gxdhQ?pwd=32nx) |
 | UIS-Mamba-S     | UIS-Mamba-S    | USIS10K   | 44.5 | 76M    | [ckpt](https://pan.baidu.com/s/1poBSuGHsS_GT1V-i3Vim9w?pwd=kyhc) |
-| UIS-Mamba-B     | UIS-Mamba-B    | USIS10K   | 46.2 | 115M   | [ckpt](https://pan.baidu.com/s/1poBSuGHsS_GT1V-i3Vim9w?pwd=kyhc) |
+| UIS-Mamba-B     | UIS-Mamba-B    | USIS10K   | 46.2 | 115M   | [ckpt](https://pan.baidu.com/s/1DDa2Rwo-uYdDTBR_VSPt6g?pwd=7qh8) |
 
 
 ## ⭐ BibTeX
