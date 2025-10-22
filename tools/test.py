@@ -25,12 +25,10 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='MMDet test (and eval) a model')
     parser.add_argument('--config',
-                        # default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_small_ms_3x.py",
-                        default="/root/data1/yzj/WaterMask/configs/vssm1/mask_rcnn_vssm_fpn_coco_tiny_ms_3x.py",
+                        default="  ",
                         help='test config file path')
     parser.add_argument('--checkpoint',
-                        # default="/root/data1/yzj/WaterMask/tools/work_dirs/mask_rcnn_vssm_fpn_coco_small_ms_3x/epoch_18.pth",
-                        default="/root/data1/yzj/WaterMask/tools/epoch_29.pth",
+                        default="  ",
                         help='checkpoint file')
     parser.add_argument(
         '--work-dir',
