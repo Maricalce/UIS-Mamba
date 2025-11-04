@@ -52,6 +52,10 @@ pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --e
 # Install other dependencies
 pip install -r requirements.txt
 
+# Install TreeScan Modules
+cd third-party/TreeScan
+pip install -v -e .
+
 ```
 
 
