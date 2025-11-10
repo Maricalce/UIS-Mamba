@@ -114,10 +114,11 @@ Pre-trained weights for UIS-Mamba variants are available for download:
 ## ⭐ BibTeX
 If you use UIS-Mamba in your research, please cite our paper:  
 ```bibtex
-@article{cong2025uis,
+@inproceedings{cong2025uis,
   title={UIS-Mamba: Exploring Mamba for Underwater Instance Segmentation via Dynamic Tree Scan and Hidden State Weaken},
   author={Cong, Runmin and Yu, Zongji and Fang, Hao and Sun, Haoyan and Kwong, Sam},
-  journal={arXiv preprint arXiv:2508.00421},
+  booktitle={Proceedings of the 33rd ACM International Conference on Multimedia},
+  pages={343--352},
   year={2025}
 }
 ```
